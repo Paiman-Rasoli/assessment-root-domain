@@ -1,4 +1,4 @@
-import { Users } from '../users/datastore/users.entity';
+import { UsersEntity } from '../users/datastore/users.entity';
 import { DataSourceOptions } from 'typeorm';
 
 export const dataStoreOptions = (): DataSourceOptions => {
@@ -21,7 +21,7 @@ export const dataStoreOptions = (): DataSourceOptions => {
         username: process.env.DB_USERNAME || 'postgres',
         password: process.env.DB_PASSWORD || '',
         synchronize: true,
-        entities: [Users],
+        entities: [UsersEntity],
       };
     case 'sqlite':
       return {

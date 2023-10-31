@@ -7,7 +7,7 @@ import {
 import { UsersDomain } from '../users.domain';
 
 @Entity({ name: 'users' })
-export class Users implements UsersDomain {
+export class UsersEntity implements UsersDomain {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
