@@ -4,7 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UsersDomain } from '../users.domain';
+import { SignupMode, Status, UsersDomain } from '../users.domain';
 
 @Entity({ name: 'users' })
 export class UsersEntity implements UsersDomain {
@@ -26,16 +26,22 @@ export class UsersEntity implements UsersDomain {
   @Column({ name: 'is_active', type: 'boolean' })
   isActive: boolean;
 
+  @Column({ type: 'enum', enum: Status })
+  status: Status;
+
+  @Column({ name: 'signup_mode', type: 'enum', enum: SignupMode })
+  signupMode: SignupMode;
+
   @Column({
     name: 'created_at',
     type: 'timestamp with time zone',
   })
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @Column({
     name: 'updated_at',
     type: 'timestamp with time zone',
   })
-  updatedAt: string;
+  updatedAt: Date;
 }

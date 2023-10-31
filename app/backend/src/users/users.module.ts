@@ -8,5 +8,6 @@ import { UsersRepository } from './datastore/users.repositrory';
   imports: [TypeOrmModule.forRepository([UsersRepository])],
   providers: [UsersService],
   controllers: [UsersController],
+  exports: [UsersService],
 })
 export class UsersModule {}

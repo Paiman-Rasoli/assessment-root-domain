@@ -2,16 +2,17 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { AppConfigService } from './config/app-config.service';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule);
   const configService = app.get<AppConfigService>(AppConfigService);
   const port = configService.get('port') || 3001;
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-    }),
+    })
   );
 
   app.enableCors({
@@ -21,8 +22,16 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  const globalPrefix = 'api/';
+  const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  const config = new DocumentBuilder()
+    .setTitle('Assessment APIs')
+    .setDescription('The description for apis in this project')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
 
