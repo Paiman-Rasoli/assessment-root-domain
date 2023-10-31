@@ -1,10 +1,11 @@
+import { Users } from '../users/datastore/users.entity';
 import { DataSourceOptions } from 'typeorm';
 
 export const dataStoreOptions = (): DataSourceOptions => {
   const stage = process.env.STAGE;
 
   if (['dev', 'prod'].includes(stage)) {
-    process.env.DB_TYPE = 'mysql';
+    process.env.DB_TYPE = 'postgres';
   } else process.env.DB_TYPE = 'sqlite';
 
   const dbType = process.env.DB_TYPE;
@@ -20,7 +21,7 @@ export const dataStoreOptions = (): DataSourceOptions => {
         username: process.env.DB_USERNAME || 'postgres',
         password: process.env.DB_PASSWORD || '',
         synchronize: true,
-        entities: [],
+        entities: [Users],
       };
     case 'sqlite':
       return {
