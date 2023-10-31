@@ -1,5 +1,6 @@
 node_modules/
 dist/
+build/
 *.env
 # Logs
 logs
@@ -32,3 +33,11 @@ coverage/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+.next/
