@@ -6,6 +6,8 @@ import {
 } from 'typeorm';
 import { SignupMode, Status, UsersDomain } from '../users.domain';
 
+export type WritableUser = Omit<UsersDomain, 'id' | 'createdAt'>;
+
 @Entity({ name: 'users' })
 export class UsersEntity implements UsersDomain {
   @PrimaryGeneratedColumn({ type: 'bigint' })

@@ -3,6 +3,8 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { VerifiedUser } from './dto/types.dto';
+import { RegisterInputDto } from './dto/inputs.dto';
+import { SignupMode } from '../users/users.domain';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,6 @@ export class AuthService {
 
     if (isMatch) {
       delete user.password;
-      delete user.updatedAt;
 
       return { ...user, access_token: '' };
     }
@@ -33,6 +34,15 @@ export class AuthService {
   async login(user: VerifiedUser): Promise<VerifiedUser> {
     const payload = { userId: user.id };
     return { ...user, access_token: this.jwtService.sign(payload) };
+  }
+
+  async register(input: RegisterInputDto): Promise<VerifiedUser> {
+    const user = await this.usersService.create({
+      ...input,
+      signupMode: SignupMode.EMAIL,
+    });
+    delete user.password;
+    return { ...user, access_token: this.jwtService.sign({ userId: user.id }) };
   }
 
   private checkPassword(

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@app/db';
-import { UsersRepository } from './datastore/users.repositrory';
+import { UsersRepository } from './datastore/users.repository';
 
 @Module({
   imports: [TypeOrmModule.forRepository([UsersRepository])],
