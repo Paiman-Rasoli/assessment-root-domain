@@ -4,14 +4,14 @@ import { AppModule } from './app/app.module';
 import { AppConfigService } from './config/app-config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule);
   const configService = app.get<AppConfigService>(AppConfigService);
   const port = configService.get('port') || 3001;
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-    }),
+    })
   );
 
   app.enableCors({
@@ -21,7 +21,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
-  const globalPrefix = 'api/';
+  const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
   await app.listen(port);
