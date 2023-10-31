@@ -1,6 +1,6 @@
 export enum Status {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
   DISABLED = 'DISABLED',
 }
 
@@ -18,6 +18,6 @@ export interface UsersDomain {
   isActive: boolean;
   status: Status;
   signupMode: SignupMode;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

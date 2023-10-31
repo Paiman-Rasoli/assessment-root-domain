@@ -37,11 +37,11 @@ export class UsersEntity implements UsersDomain {
     type: 'timestamp with time zone',
   })
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
 
   @Column({
     name: 'updated_at',
     type: 'timestamp with time zone',
   })
-  updatedAt: string;
+  updatedAt: Date;
 }
