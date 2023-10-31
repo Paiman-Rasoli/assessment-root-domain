@@ -13,4 +13,10 @@ export const envProd = (): AppConfigSchema => ({
   allowedOrigins: [],
   tokenSecret: process.env.AUTH_TOKEN_SECRET,
   expireIn: process.env.EXPIRE_IN,
+  email: {
+    service_id: process.env.EMAIL_SERVICE_ID,
+    template_id: process.env.EMAIL_TEMPLATE_ID,
+    user_id: process.env.EMAIL_USER_ID,
+    accessToken: process.env.EMAIL_ACCESS_TOKE,
+  },
 });

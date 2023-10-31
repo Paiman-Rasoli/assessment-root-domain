@@ -1,3 +1,4 @@
+import { OtvcEntity } from 'src/otvc/datastore/otvc.entity';
 import { UsersEntity } from '../users/datastore/users.entity';
 import { DataSourceOptions } from 'typeorm';
 
@@ -21,7 +22,7 @@ export const dataStoreOptions = (): DataSourceOptions => {
         username: process.env.DB_USERNAME || 'postgres',
         password: process.env.DB_PASSWORD || '',
         synchronize: true,
-        entities: [UsersEntity],
+        entities: [UsersEntity, OtvcEntity],
       };
     case 'sqlite':
       return {
