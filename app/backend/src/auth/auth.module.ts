@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt-strategy';
 import { AuthController } from './auth.controller';
+import { OtvcModule } from '../otvc/otvc.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AuthController } from './auth.controller';
       },
       inject: [AppConfigService],
     }),
+    OtvcModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

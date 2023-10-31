@@ -5,12 +5,15 @@ import * as bcrypt from 'bcrypt';
 import { VerifiedUser } from './dto/types.dto';
 import { RegisterInputDto } from './dto/inputs.dto';
 import { SignupMode } from '../users/users.domain';
+import { OtvcService } from '../otvc/otvc.service';
+import { Scope } from '../otvc/otvc.domain';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly otvcService: OtvcService
   ) {}
 
   async validateUser(email: string, password: string): Promise<VerifiedUser> {
@@ -42,6 +45,14 @@ export class AuthService {
       signupMode: SignupMode.EMAIL,
     });
     delete user.password;
+
+    await this.otvcService.create(
+      user.id,
+      user.email,
+      `${user.firstName} ${user.lastName}`,
+      Scope.EMAIL_VERIFY
+    );
+
     return { ...user, access_token: this.jwtService.sign({ userId: user.id }) };
   }
 
