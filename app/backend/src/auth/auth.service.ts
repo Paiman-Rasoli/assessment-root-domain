@@ -3,7 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { VerifiedUser } from './dto/types.dto';
-import { RegisterInputDto } from './dto/inputs.dto';
+import { RegisterInputDto, VerifyInputDto } from './dto/inputs.dto';
 import { SignupMode } from '../users/users.domain';
 import { OtvcService } from '../otvc/otvc.service';
 import { Scope } from '../otvc/otvc.domain';
@@ -39,7 +39,7 @@ export class AuthService {
     return { ...user, access_token: this.jwtService.sign(payload) };
   }
 
-  async register(input: RegisterInputDto): Promise<VerifiedUser> {
+  async register(input: RegisterInputDto): Promise<boolean> {
     const user = await this.usersService.create({
       ...input,
       signupMode: SignupMode.EMAIL,
@@ -52,6 +52,20 @@ export class AuthService {
       `${user.firstName} ${user.lastName}`,
       Scope.EMAIL_VERIFY
     );
+
+    return true;
+  }
+
+  async verify(input: VerifyInputDto): Promise<VerifiedUser> {
+    const otvc = await this.otvcService.findOne(
+      Number(input.code),
+      Scope.EMAIL_VERIFY
+    );
+
+    const user = await this.usersService.verifyUser(otvc.userId);
+    await this.otvcService.removeOne(otvc.code);
+
+    delete user.password;
 
     return { ...user, access_token: this.jwtService.sign({ userId: user.id }) };
   }

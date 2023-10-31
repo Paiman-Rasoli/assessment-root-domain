@@ -39,4 +39,16 @@ export class UsersService {
     }
     return this.usersRepository.save(newUser);
   }
+
+  async verifyUser(userId: number): Promise<UsersDomain> {
+    const actions = await Promise.all([
+      this.usersRepository.update(
+        { id: userId },
+        { status: Status.ACTIVE, isActive: true, updatedAt: new Date() }
+      ),
+      this.usersRepository.findOneBy({ id: userId }),
+    ]);
+
+    return actions[1];
+  }
 }

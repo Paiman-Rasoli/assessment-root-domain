@@ -40,3 +40,9 @@ export class RegisterInputDto {
   @IsNotEmpty()
   lastName: string;
 }
+
+export class VerifyInputDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  code: string;
+}

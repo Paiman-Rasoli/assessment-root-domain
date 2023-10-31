@@ -1,7 +1,11 @@
 import { AuthService } from './auth.service';
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard, SkipAuth } from '@app/utils';
-import { LoginInputDto, RegisterInputDto } from './dto/inputs.dto';
+import {
+  LoginInputDto,
+  RegisterInputDto,
+  VerifyInputDto,
+} from './dto/inputs.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
@@ -22,5 +26,11 @@ export class AuthController {
   @SkipAuth()
   async registerAction(@Body() body: RegisterInputDto) {
     return this.authService.register(body);
+  }
+
+  @Post('verify')
+  @SkipAuth()
+  async verifyEmailAction(@Body() body: VerifyInputDto) {
+    return this.authService.verify(body);
   }
 }
