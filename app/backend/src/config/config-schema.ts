@@ -8,11 +8,11 @@ export interface DatabaseConfig {
   password: string;
 }
 
-export interface TwilioConfig {
-  accountSid: string;
-  authToken: string;
-  fromNumber: string;
-  statusCallbackUrl: string;
+export interface EmailConfig {
+  service_id: string;
+  template_id: string;
+  user_id: string;
+  accessToken: string;
 }
 
 export interface AppConfigSchema {
@@ -22,4 +22,5 @@ export interface AppConfigSchema {
   allowedOrigins: string[];
   tokenSecret: string;
   expireIn: string;
+  email: EmailConfig;
 }
