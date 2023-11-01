@@ -45,7 +45,10 @@ export class UsersService {
     const find = await this.getByEmail(input.email);
 
     if (find) {
-      throw new DuplicateUserException(input.email);
+      if (find.status !== Status.INACTIVE) {
+        throw new DuplicateUserException(input.email);
+      }
+      await this.usersRepository.delete({ email: input.email });
     }
 
     const newUser = {

@@ -9,9 +9,10 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { DASHBOARD_PAGE, TOKEN_KEY, VERIFY_PAGE } from "@/constant";
 import Cookies from "js-cookie";
+import { BASE_URL } from "@/config";
 
 const SignInSchema = Yup.object().shape({
-  email: Yup.string().email().required("Email is required"),
+  email: Yup.string().email("Email is invalid").required("Email is required"),
 
   password: Yup.string()
     .required("Password is required")
@@ -51,6 +52,10 @@ function LoginForm() {
     [loginMutate, router]
   );
 
+  const handleLoginWithGoogle = () => {
+    window.open(`${BASE_URL}/auth/google`);
+  };
+
   return (
     <section className="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
       <div className="bg-gray-100 p-5 flex rounded-2xl shadow-lg max-w-3xl">
@@ -73,7 +78,7 @@ function LoginForm() {
                   <div>
                     <label className="block text-gray-700">Email Address</label>
                     <input
-                      type="email"
+                      type="text"
                       name="email"
                       placeholder="Enter Email Address"
                       value={values.email}
@@ -126,7 +131,11 @@ function LoginForm() {
             <hr className="border-gray-500" />
           </div>
 
-          <button className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm hover:scale-105 duration-300 ">
+          <button
+            disabled={isLoading}
+            onClick={handleLoginWithGoogle}
+            className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm hover:scale-105 duration-300 "
+          >
             <img src="/google.svg" className="w-8" />
             <span className="ml-4">Login with Google</span>
           </button>

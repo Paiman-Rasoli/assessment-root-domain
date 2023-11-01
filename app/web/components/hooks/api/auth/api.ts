@@ -5,7 +5,7 @@ import { useMutation } from "react-query";
 
 const AUTH_ENDPOINT = "/auth/login";
 const VERIFY_ENDPOINT = "/auth/verify";
-const REGISTER_ENDPOINT = "/auth/register";
+const REGISTER_ENDPOINT = "/auth/signup";
 const LOGOUT_ENDPOINT = "/auth/logout";
 
 export const useLoginMutation = (
@@ -31,7 +31,7 @@ export const useVerifyMutation = (
   return useMutation(mutationFn, options);
 };
 
-export const useRegisetMutation = (
+export const useRegisterMutation = (
   options?: UseMutationOptions<RegisterInput, boolean>
 ) => {
   const mutationFn = (data: RegisterInput): any =>
