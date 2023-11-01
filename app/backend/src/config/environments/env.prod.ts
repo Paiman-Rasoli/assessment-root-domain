@@ -6,11 +6,14 @@ export const envProd = (): AppConfigSchema => ({
   database: {
     name: process.env.DB_NAME,
     host: process.env.DB_HOST,
-    port: parseInt(process.env.DATABASE_PORT, 10) || 3306,
+    port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
   },
-  allowedOrigins: ['http://localhost:3000'],
+  allowedOrigins: [
+    'http://localhost:3000',
+    'https://assessment-root-domain.vercel.app',
+  ],
   tokenSecret: process.env.AUTH_TOKEN_SECRET,
   expireIn: process.env.EXPIRE_IN,
   email: {
