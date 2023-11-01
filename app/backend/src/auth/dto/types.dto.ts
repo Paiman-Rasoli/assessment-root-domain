@@ -5,7 +5,7 @@ export class VerifiedUser {
   firstName: string;
   lastName: string;
   email: string;
-  SignupMode?: SignupMode;
+  signupMode?: SignupMode;
   status: Status;
   isActive: boolean;
   createdAt: Date;

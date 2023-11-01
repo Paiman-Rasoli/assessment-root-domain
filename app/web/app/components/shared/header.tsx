@@ -1,8 +1,9 @@
 "use client";
 
 import { useLogoutMutation, useMeQuery, useUserInfo } from "@/components/hooks";
-import { LOGIN_PAGE, TOKEN_KEY } from "@/constant";
+import { LOGIN_PAGE, PROFILE_PAGE, TOKEN_KEY } from "@/constant";
 import Cookies from "js-cookie";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
@@ -58,9 +59,12 @@ export function Header({ children }: HeaderProps) {
               <nav>
                 <ul className="flex space-x-4">
                   <li>
-                    <a href="#" className="text-white hover:text-gray-300">
+                    <Link
+                      className="text-white hover:text-gray-300"
+                      href={PROFILE_PAGE}
+                    >
                       Profile
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <button

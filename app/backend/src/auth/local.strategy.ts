@@ -32,7 +32,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new NotVerifiedException();
     }
 
-    if (verifiedUser.SignupMode !== SignupMode.EMAIL) {
+    if (verifiedUser.signupMode !== SignupMode.EMAIL) {
       Logger.error('You should signin with google,');
       throw new InvalidSignupMode();
     }

@@ -6,3 +6,5 @@ export type User = {
   email: string;
   createdAt: Date;
 };
+
+export type UpdateInput = Pick<User, "firstName" | "lastName">;
