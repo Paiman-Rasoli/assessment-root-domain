@@ -1,9 +1,10 @@
 "use client";
 
-import { useMeQuery, useUserInfo } from "@/components/hooks";
+import { useLogoutMutation, useMeQuery, useUserInfo } from "@/components/hooks";
 import { LOGIN_PAGE, TOKEN_KEY } from "@/constant";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 type HeaderProps = {
   children: React.ReactNode;
@@ -11,14 +12,15 @@ type HeaderProps = {
 
 export function Header({ children }: HeaderProps) {
   const token = Cookies.get(TOKEN_KEY);
+  const { mutateAsync: logoutMutate } = useLogoutMutation();
+  const router = useRouter();
   const { setUser, email, fullName } = useUserInfo((state) => ({
     setUser: state.setUser,
     email: state.email,
     fullName: `${state.firstName} ${state.lastName}`,
   }));
-  const router = useRouter();
 
-  const { isLoading, isError, data } = useMeQuery(
+  const { isLoading, isError } = useMeQuery(
     {},
     {
       enabled: !token || !email,
@@ -35,6 +37,13 @@ export function Header({ children }: HeaderProps) {
     }
   );
 
+  const handleLogout = useCallback(() => {
+    logoutMutate({}).then(() => {
+      Cookies.remove(TOKEN_KEY);
+      router.replace(LOGIN_PAGE);
+    });
+  }, [logoutMutate, router]);
+
   return (
     <div className="h-full">
       {isLoading || isError ? (
@@ -42,7 +51,31 @@ export function Header({ children }: HeaderProps) {
           <img src="/spin.svg" className="w-8" />
         </div>
       ) : (
-        children
+        <div className="h-full">
+          <header className="bg-gray-800 py-4">
+            <div className="container mx-auto flex items-center justify-between px-4">
+              <h1 className="text-white text-2xl capitalize">{fullName}</h1>
+              <nav>
+                <ul className="flex space-x-4">
+                  <li>
+                    <a href="#" className="text-white hover:text-gray-300">
+                      Profile
+                    </a>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="text-white hover:text-gray-300"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </header>
+          {children}
+        </div>
       )}
     </div>
   );
