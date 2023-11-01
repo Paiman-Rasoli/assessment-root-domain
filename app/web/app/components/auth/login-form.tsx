@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useLoginMutation, useUserInfo } from "@/components/hooks";
@@ -52,8 +52,26 @@ function LoginForm() {
     [loginMutate, router]
   );
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("access_token");
+    if (token) {
+      Cookies.set(TOKEN_KEY, token);
+      router.push(DASHBOARD_PAGE);
+    }
+    const error = urlParams.get("error");
+    if (error) {
+      let message = "A server error occurred";
+      if (error === "INVALID_MODE") {
+        message = "You have already registered by email.";
+      }
+
+      toast(message, { type: "error" });
+    }
+  }, []);
+
   const handleLoginWithGoogle = () => {
-    window.open(`${BASE_URL}/auth/google`);
+    window.open(`${BASE_URL}/auth/google`, "_self");
   };
 
   return (

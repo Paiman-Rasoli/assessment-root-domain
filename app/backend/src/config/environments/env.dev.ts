@@ -19,4 +19,10 @@ export const envDev = (): AppConfigSchema => ({
     user_id: process.env.EMAIL_USER_ID,
     accessToken: process.env.EMAIL_ACCESS_TOKE,
   },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    secret: process.env.GOOGLE_SECRET_ID,
+    callbackUrl: process.env.GOOGLE_CALLBACK_URL,
+  },
+  webUrl: process.env.WEB_URL,
 });

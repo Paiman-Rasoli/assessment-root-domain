@@ -2,9 +2,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { Injectable, Logger } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { InvalidLoginCredentials, NotVerifiedException } from './errors';
+import {
+  InvalidLoginCredentials,
+  InvalidSignupMode,
+  NotVerifiedException,
+} from './errors';
 import { VerifiedUser } from './dto/types.dto';
-import { Status } from 'src/users/users.domain';
+import { SignupMode, Status } from 'src/users/users.domain';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -26,6 +30,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (verifiedUser.status !== Status.ACTIVE) {
       Logger.error('User is disabled.');
       throw new NotVerifiedException();
+    }
+
+    if (verifiedUser.SignupMode !== SignupMode.EMAIL) {
+      Logger.error('You should signin with google,');
+      throw new InvalidSignupMode();
     }
 
     return verifiedUser;

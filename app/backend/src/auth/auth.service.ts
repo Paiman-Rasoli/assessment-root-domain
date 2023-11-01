@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { VerifiedUser } from './dto/types.dto';
+import { GoogleResponse, VerifiedUser } from './dto/types.dto';
 import { RegisterInputDto, VerifyInputDto } from './dto/inputs.dto';
-import { SignupMode } from '../users/users.domain';
+import { SignupMode, Status } from '../users/users.domain';
 import { OtvcService } from '../otvc/otvc.service';
 import { Scope } from '../otvc/otvc.domain';
 
@@ -21,6 +21,10 @@ export class AuthService {
 
     if (!user) {
       return null;
+    }
+
+    if (user.signupMode === SignupMode.GOOGLE) {
+      return { ...user, access_token: '' };
     }
 
     const isMatch = await this.checkPassword(password, user.password);
@@ -40,6 +44,44 @@ export class AuthService {
   async login(user: VerifiedUser): Promise<VerifiedUser> {
     const payload = { userId: user.id };
     return { ...user, access_token: this.jwtService.sign(payload) };
+  }
+
+  async loginGoogle(user): Promise<GoogleResponse> {
+    const findUser = await this.usersService.getByEmail(user.email);
+
+    if (findUser) {
+      if (findUser.signupMode === SignupMode.EMAIL) {
+        return {
+          errorCode: 'INVALID_MODE',
+        };
+      }
+      if (findUser.status === Status.DISABLED) {
+        return {
+          errorCode: 'DISABLED',
+        };
+      }
+      // update activity status
+      await this.usersService.update(findUser.id, {
+        isActive: false,
+        updatedAt: new Date(),
+      });
+
+      return {
+        accessToken: this.jwtService.sign({ userId: findUser.id }),
+      };
+    }
+    // signup by google
+    const newUser = await this.usersService.create({
+      signupMode: SignupMode.GOOGLE,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      password: '',
+    });
+
+    return {
+      accessToken: this.jwtService.sign({ userId: newUser.id }),
+    };
   }
 
   async logout(userId: number): Promise<boolean> {
