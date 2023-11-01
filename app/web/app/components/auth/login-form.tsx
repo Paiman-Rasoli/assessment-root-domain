@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { useLoginMutation, useUserInfo } from "@/components/hooks";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { DASHBOARD_PAGE, TOKEN_KEY, VERIFY_PAGE } from "@/constant";
+import Cookies from "js-cookie";
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
@@ -14,14 +19,38 @@ const SignInSchema = Yup.object().shape({
 });
 
 function LoginForm() {
+  const { mutate: loginMutate, isLoading } = useLoginMutation();
+  const setUser = useUserInfo((state) => state.setUser);
+
+  const router = useRouter();
   const initialValues = {
     email: "",
     password: "",
   };
 
-  const handleLogin = useCallback((form: typeof initialValues) => {
-    console.log(form);
-  }, []);
+  const handleLogin = useCallback(
+    (form: typeof initialValues) => {
+      loginMutate(form, {
+        onError(error: any) {
+          const message: string =
+            error?.response?.data?.message || error?.message;
+
+          if (message.includes("been verified")) {
+            router.push(VERIFY_PAGE);
+            return;
+          }
+
+          toast(message, { type: "error", pauseOnFocusLoss: false });
+        },
+        onSuccess(response) {
+          Cookies.set(TOKEN_KEY, response.access_token);
+          setUser(response);
+          router.push(DASHBOARD_PAGE);
+        },
+      });
+    },
+    [loginMutate, router]
+  );
 
   return (
     <section className="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
@@ -77,10 +106,15 @@ function LoginForm() {
 
                   <button
                     type="submit"
+                    disabled={isLoading}
                     className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
                 px-4 py-3 mt-6"
                   >
-                    Log In
+                    {isLoading ? (
+                      <img src="/spin.svg" className="w-4 mx-auto" />
+                    ) : (
+                      "Log In"
+                    )}
                   </button>
                 </Form>
               );
