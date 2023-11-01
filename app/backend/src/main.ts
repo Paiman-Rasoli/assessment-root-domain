@@ -27,7 +27,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Assessment APIs')
-    .setDescription('The description for apis in this project')
+    .setDescription('All APIs that the project consumer.')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
