@@ -27,7 +27,10 @@ export class AuthService {
 
     if (isMatch) {
       delete user.password;
-
+      await this.usersService.update(user.id, {
+        isActive: false,
+        updatedAt: new Date(),
+      });
       return { ...user, access_token: '' };
     }
 
