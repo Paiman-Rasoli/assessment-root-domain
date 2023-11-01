@@ -8,3 +8,9 @@ body,
   height: 100%;
   margin: 0;
 }
+
+@layer components {
+  .error {
+    @apply text-red-400 !important;
+  }
+}

@@ -7,6 +7,7 @@ import {
 import { SignupMode, Status, UsersDomain } from '../users.domain';
 
 export type WritableUser = Omit<UsersDomain, 'id' | 'createdAt'>;
+export type UpdatableUser = Partial<WritableUser>;
 
 @Entity({ name: 'users' })
 export class UsersEntity implements UsersDomain {

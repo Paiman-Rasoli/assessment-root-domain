@@ -27,7 +27,10 @@ export class AuthService {
 
     if (isMatch) {
       delete user.password;
-
+      await this.usersService.update(user.id, {
+        isActive: false,
+        updatedAt: new Date(),
+      });
       return { ...user, access_token: '' };
     }
 
@@ -37,6 +40,13 @@ export class AuthService {
   async login(user: VerifiedUser): Promise<VerifiedUser> {
     const payload = { userId: user.id };
     return { ...user, access_token: this.jwtService.sign(payload) };
+  }
+
+  async logout(userId: number): Promise<boolean> {
+    return this.usersService.update(userId, {
+      isActive: false,
+      updatedAt: new Date(),
+    });
   }
 
   async register(input: RegisterInputDto): Promise<boolean> {

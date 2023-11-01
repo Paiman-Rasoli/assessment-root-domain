@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard, SkipAuth } from '@app/utils';
+import { LocalAuthGuard, RestReqUser, SkipAuth, UserInfo } from '@app/utils';
 import {
   LoginInputDto,
   RegisterInputDto,
@@ -32,5 +32,10 @@ export class AuthController {
   @SkipAuth()
   async verifyEmailAction(@Body() body: VerifyInputDto) {
     return this.authService.verify(body);
+  }
+
+  @Post('logout')
+  async logoutAction(@RestReqUser() userInfo: UserInfo) {
+    return this.authService.logout(userInfo.userId);
   }
 }
