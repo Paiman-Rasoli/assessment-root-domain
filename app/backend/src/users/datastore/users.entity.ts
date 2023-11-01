@@ -20,7 +20,7 @@ export class UsersEntity implements UsersDomain {
   @Column({ type: 'varchar', length: 225 })
   lastName: string;
 
-  @Column({ type: 'varchar', length: 225 })
+  @Column({ type: 'varchar', length: 225, unique: true })
   email: string;
 
   @Column({ type: 'varchar', length: 225 })
