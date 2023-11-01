@@ -8,3 +8,10 @@ export type User = {
 };
 
 export type UpdateInput = Pick<User, "firstName" | "lastName">;
+
+export type AnalyticResult = {
+  totalActiveSignup: number;
+
+  totalActiveToday: number;
+  averageActivePastSevenDays: number;
+};

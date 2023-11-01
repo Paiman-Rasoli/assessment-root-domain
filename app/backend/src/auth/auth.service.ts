@@ -37,9 +37,10 @@ export class AuthService {
     if (isMatch) {
       delete user.password;
       await this.usersService.update(user.id, {
-        isActive: false,
+        isActive: true,
         updatedAt: new Date(),
       });
+
       return { ...user, access_token: '' };
     }
 
@@ -67,7 +68,7 @@ export class AuthService {
       }
       // update activity status
       await this.usersService.update(findUser.id, {
-        isActive: false,
+        isActive: true,
         updatedAt: new Date(),
       });
 
@@ -120,7 +121,13 @@ export class AuthService {
     );
 
     const user = await this.usersService.verifyUser(otvc.userId);
-    await this.otvcService.removeOne(otvc.code);
+    await Promise.all([
+      this.otvcService.removeOne(otvc.code),
+      this.usersService.update(user.id, {
+        isActive: true,
+        updatedAt: new Date(),
+      }),
+    ]);
 
     delete user.password;
 

@@ -5,7 +5,7 @@ import { UserCreateInput } from './dto/inputs.dto';
 import { DuplicateUserException, UnauthorizedException } from './errors';
 import * as bcrypt from 'bcrypt';
 import { UpdatableUser, WritableUser } from './datastore/users.entity';
-import { User } from './dto/types.dto';
+import { AnalyticResultDto, User } from './dto/types.dto';
 import { mapDomainToDto } from './dto.mapper';
 
 @Injectable()
@@ -32,6 +32,21 @@ export class UsersService {
   async update(userId: number, user: UpdatableUser): Promise<boolean> {
     const update = await this.usersRepository.update({ id: userId }, user);
     return update.affected > 0;
+  }
+
+  async analytic(): Promise<AnalyticResultDto> {
+    const [totalSignup, totalActiveToday, averagePastSevenDays] =
+      await Promise.all([
+        this.usersRepository.getTotalActiveSignup(),
+        this.usersRepository.getTotalActiveToday(),
+        this.usersRepository.getAveragePastSevenDays(),
+      ]);
+
+    return {
+      totalActiveSignup: totalSignup,
+      totalActiveToday: totalActiveToday,
+      averageActivePastSevenDays: averagePastSevenDays,
+    };
   }
 
   /**

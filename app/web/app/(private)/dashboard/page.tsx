@@ -1,5 +1,7 @@
+import AnalyticCard from "@/app/components/dashboard/analytic-card";
+
 function Dashboard() {
-  return <p>Dashboard</p>;
+  return <AnalyticCard />;
 }
 
 export default Dashboard;

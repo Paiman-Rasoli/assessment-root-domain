@@ -22,3 +22,14 @@ export class User {
   @ApiProperty()
   createdAt: Date;
 }
+
+export class AnalyticResultDto {
+  @ApiProperty()
+  totalActiveSignup: number;
+
+  @ApiProperty()
+  totalActiveToday: number;
+
+  @ApiProperty()
+  averageActivePastSevenDays: number;
+}
