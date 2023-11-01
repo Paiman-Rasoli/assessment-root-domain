@@ -2,7 +2,7 @@ import { TOKEN_KEY } from "@/constant";
 import { createAxiosClient } from "@/utils";
 import Cookies from "js-cookie";
 
-const BASE_URL = process.env.API_URL || "http://localhost:3000/api";
+const BASE_URL = process.env.API_URL || "http://localhost:9000/api";
 
 export const httpClient = createAxiosClient({
   baseURL: BASE_URL,
