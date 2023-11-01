@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { useRegisterMutation } from "@/components/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { BASE_URL } from "@/config";
 
 const SignInSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -49,6 +50,10 @@ function LoginForm() {
       },
     });
   }, []);
+
+  const handleSignupWithGoogle = () => {
+    window.open(`${BASE_URL}/auth/google`, "_self");
+  };
 
   return (
     <section className="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
@@ -179,6 +184,7 @@ function LoginForm() {
 
           <button
             disabled={isLoading}
+            onClick={handleSignupWithGoogle}
             className="bg-white border py-2 w-full rounded-xl mt-5 flex justify-center items-center text-sm hover:scale-105 duration-300 "
           >
             <img src="/google.svg" className="w-8" />

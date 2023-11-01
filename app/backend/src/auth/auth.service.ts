@@ -23,6 +23,10 @@ export class AuthService {
       return null;
     }
 
+    if (user.signupMode === SignupMode.GOOGLE) {
+      return { ...user, access_token: '' };
+    }
+
     const isMatch = await this.checkPassword(password, user.password);
 
     if (isMatch) {
@@ -56,11 +60,16 @@ export class AuthService {
           errorCode: 'DISABLED',
         };
       }
+      // update activity status
+      await this.usersService.update(findUser.id, {
+        isActive: false,
+        updatedAt: new Date(),
+      });
+
       return {
         accessToken: this.jwtService.sign({ userId: findUser.id }),
       };
     }
-    console.log('User by google', user);
     // signup by google
     const newUser = await this.usersService.create({
       signupMode: SignupMode.GOOGLE,
