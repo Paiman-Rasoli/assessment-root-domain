@@ -1,28 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { FormEventHandler, useCallback, useState } from "react";
+import { useCallback } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+
+const SignInSchema = Yup.object().shape({
+  email: Yup.string().email().required("Email is required"),
+
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password is too short - should be 8 chars minimum"),
+});
 
 function LoginForm() {
-  const [formData, setFormData] = useState({
+  const initialValues = {
     email: "",
     password: "",
-  });
-
-  const handleOnChange = (key: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
   };
 
-  const handleLogin: FormEventHandler<HTMLFormElement> = useCallback(
-    (e) => {
-      e.preventDefault();
-      console.log(formData);
-    },
-    [formData]
-  );
+  const handleLogin = useCallback((form: typeof initialValues) => {
+    console.log(form);
+  }, []);
 
   return (
     <section className="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
@@ -32,50 +31,61 @@ function LoginForm() {
           <p className="text-sm mt-4 text-[#002D74]">
             If you have an account, please login
           </p>
-          <form className="mt-6" onSubmit={handleLogin}>
-            <div>
-              <label className="block text-gray-700">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-                value={formData["email"]}
-                placeholder="Enter Email Address"
-                className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
-                required
-              />
-            </div>
+          <Formik
+            onSubmit={handleLogin}
+            validationSchema={SignInSchema}
+            initialValues={initialValues}
+          >
+            {(formik) => {
+              const { errors, touched, handleChange, values, handleBlur } =
+                formik;
 
-            <div className="mt-4">
-              <label className="block text-gray-700">Password</label>
-              <input
-                type="password"
-                name="password"
-                onChange={(e) => handleOnChange(e.target.name, e.target.value)}
-                value={formData["password"]}
-                placeholder="Enter Password"
-                className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
+              return (
+                <Form className="mt-6">
+                  <div>
+                    <label className="block text-gray-700">Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Enter Email Address"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                  {errors.email && touched.email && (
+                    <span className="error">{errors.email}</span>
+                  )}
+
+                  <div className="mt-4">
+                    <label className="block text-gray-700">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Enter Password"
+                      className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
                   focus:bg-white focus:outline-none"
-              />
-            </div>
+                    />
+                  </div>
+                  {errors.password && touched.password && (
+                    <span className="error">{errors.password}</span>
+                  )}
 
-            {/* <div className="text-right mt-2">
-              <a
-                href="#"
-                className="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700"
-              >
-                Forgot Password?
-              </a>
-            </div> */}
-
-            <button
-              type="submit"
-              className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
+                  <button
+                    type="submit"
+                    className="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
                 px-4 py-3 mt-6"
-            >
-              Log In
-            </button>
-          </form>
+                  >
+                    Log In
+                  </button>
+                </Form>
+              );
+            }}
+          </Formik>
 
           <div className="mt-7 grid grid-cols-3 items-center text-gray-500">
             <hr className="border-gray-500" />
