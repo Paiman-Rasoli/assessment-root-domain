@@ -39,6 +39,13 @@ export class AuthService {
     return { ...user, access_token: this.jwtService.sign(payload) };
   }
 
+  async logout(userId: number): Promise<boolean> {
+    return this.usersService.update(userId, {
+      isActive: false,
+      updatedAt: new Date(),
+    });
+  }
+
   async register(input: RegisterInputDto): Promise<boolean> {
     const user = await this.usersService.create({
       ...input,

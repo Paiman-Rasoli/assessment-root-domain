@@ -4,7 +4,7 @@ import { SignupMode, Status, UsersDomain } from './users.domain';
 import { UserCreateInput } from './dto/inputs.dto';
 import { DuplicateUserException, UnauthorizedException } from './errors';
 import * as bcrypt from 'bcrypt';
-import { WritableUser } from './datastore/users.entity';
+import { UpdatableUser, WritableUser } from './datastore/users.entity';
 import { User } from './dto/types.dto';
 import { mapDomainToDto } from './dto.mapper';
 
@@ -27,6 +27,11 @@ export class UsersService {
     }
 
     return mapDomainToDto(user);
+  }
+
+  async update(userId: number, user: UpdatableUser): Promise<boolean> {
+    const update = await this.usersRepository.update({ id: userId }, user);
+    return update.affected > 0;
   }
 
   /**

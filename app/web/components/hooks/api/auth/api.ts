@@ -6,12 +6,20 @@ import { useMutation } from "react-query";
 const AUTH_ENDPOINT = "/auth/login";
 const VERIFY_ENDPOINT = "/auth/verify";
 const REGISTER_ENDPOINT = "/auth/register";
+const LOGOUT_ENDPOINT = "/auth/logout";
 
 export const useLoginMutation = (
   options?: UseMutationOptions<LoginInput, VerifiedUser>
 ) => {
   const mutationFn = (data: LoginInput): any =>
     httpClient.post(AUTH_ENDPOINT, data);
+  return useMutation(mutationFn, options);
+};
+
+export const useLogoutMutation = (
+  options?: UseMutationOptions<any, boolean>
+) => {
+  const mutationFn = (data: any): any => httpClient.post(LOGOUT_ENDPOINT, data);
   return useMutation(mutationFn, options);
 };
 
