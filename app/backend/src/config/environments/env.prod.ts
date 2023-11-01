@@ -2,7 +2,7 @@ import { AppConfigSchema } from '../config-schema';
 
 export const envProd = (): AppConfigSchema => ({
   stage: 'prod',
-  port: parseInt(process.env.PORT, 10) || 3000,
+  port: parseInt(process.env.PORT, 10) || 9000,
   database: {
     name: process.env.DB_NAME,
     host: process.env.DB_HOST,
@@ -10,7 +10,7 @@ export const envProd = (): AppConfigSchema => ({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
   },
-  allowedOrigins: [],
+  allowedOrigins: ['http://localhost:3000'],
   tokenSecret: process.env.AUTH_TOKEN_SECRET,
   expireIn: process.env.EXPIRE_IN,
   email: {
