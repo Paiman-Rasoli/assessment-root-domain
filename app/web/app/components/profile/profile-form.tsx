@@ -103,9 +103,9 @@ function ProfileForm() {
               <Form>
                 <div className="-mx-3 flex flex-col flex-wrap">
                   {disabled && (
-                    <p className="mb-2">
-                      Please update your google account password. This future is
-                      for those who did not signup with google.😊
+                    <p className="mb-4">
+                      This feature is specifically designed for individuals who
+                      have not signed up with Google.🙂
                     </p>
                   )}
                   <div className="w-full px-3 sm:w-1/2">
@@ -181,7 +181,7 @@ function ProfileForm() {
                 </div>
                 <div>
                   <button
-                    disabled={resetPasswordIsLoading}
+                    disabled={resetPasswordIsLoading || disabled}
                     className="hover:shadow-form w-[47%] block rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
                   >
                     {resetPasswordIsLoading ? (
