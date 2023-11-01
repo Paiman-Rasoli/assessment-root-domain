@@ -21,4 +21,9 @@ export class UsersController {
   ) {
     return this.usersService.update(userInfo.userId, body);
   }
+
+  @Get('analytic')
+  async analyticAction() {
+    return this.usersService.analytic();
+  }
 }
