@@ -64,8 +64,6 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleOauthGuard)
   async googleAuthRedirect(@Req() req, @Res() res) {
-    //TODO: (more improvement) check state against local db
-
     //create account  with Google account_type if not exist and generate redirect params
     const result = await this.authService.loginGoogle(req.user);
     if (result.errorCode) {

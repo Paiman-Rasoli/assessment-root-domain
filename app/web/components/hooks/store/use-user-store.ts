@@ -3,6 +3,7 @@ import { User } from "../api/user/types";
 
 export interface UserState extends User {
   setUser: (user: User) => void;
+  update: (newData: Partial<User>) => void;
 }
 
 export const useUserInfo = createWithEqualityFn<UserState>(
@@ -23,6 +24,11 @@ export const useUserInfo = createWithEqualityFn<UserState>(
         createdAt: userInput.createdAt,
       }));
     },
+    update: (newData) =>
+      set((prev) => ({
+        ...prev,
+        ...newData,
+      })),
   }),
   Object.is
 );
