@@ -14,23 +14,22 @@ interface VerificationInput {
 export class EmailHelper {
   constructor(private readonly configService: AppConfigService) {}
 
-  async sendVerificationEmail(input: VerificationInput): Promise<void> {
-    Logger.warn('Email config', this.configService.get('email'));
-    axios
-      .post(EMAIL_URL, {
+  async sendVerificationEmail(input: VerificationInput): Promise<boolean> {
+    const { data, status } = await axios.post(
+      EMAIL_URL,
+      {
         ...this.configService.get('email'),
         template_params: {
           to_name: input.fullName,
           to: input.email,
           code: input.code,
         },
-      })
-      .then(() => {
-        Logger.log('Email sent successfully');
-      })
-      .catch((err) => {
-        console.log(err);
-        Logger.error('Error while sending email.', { err });
-      });
+      },
+      {
+        timeout: 5000,
+      }
+    );
+    Logger.warn('Email Payload', { data });
+    return [200, 201].includes(status);
   }
 }
