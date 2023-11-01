@@ -2,13 +2,32 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './datastore/users.repository';
 import { SignupMode, Status, UsersDomain } from './users.domain';
 import { UserCreateInput } from './dto/inputs.dto';
-import { DuplicateUserException } from './errors';
+import { DuplicateUserException, UnauthorizedException } from './errors';
 import * as bcrypt from 'bcrypt';
 import { WritableUser } from './datastore/users.entity';
+import { User } from './dto/types.dto';
+import { mapDomainToDto } from './dto.mapper';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
+
+  async me(userId): Promise<User> {
+    if (!userId) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.usersRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    if (user.status !== Status.ACTIVE) {
+      throw new UnauthorizedException();
+    }
+
+    return mapDomainToDto(user);
+  }
 
   /**
    * usage: internal
