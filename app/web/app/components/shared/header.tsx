@@ -40,7 +40,7 @@ export function Header({ children }: HeaderProps) {
   const handleLogout = useCallback(() => {
     logoutMutate({}).then(() => {
       Cookies.remove(TOKEN_KEY);
-      router.replace(LOGIN_PAGE);
+      router.push(LOGIN_PAGE);
     });
   }, [logoutMutate, router]);
 

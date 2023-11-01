@@ -39,8 +39,7 @@ function LoginForm() {
             router.push(VERIFY_PAGE);
             return;
           }
-
-          toast(message, { type: "error", pauseOnFocusLoss: false });
+          toast(message, { type: "error" });
         },
         onSuccess(response) {
           Cookies.set(TOKEN_KEY, response.access_token);
