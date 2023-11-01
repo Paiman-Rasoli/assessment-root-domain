@@ -1,5 +1,11 @@
 import { UseMutationOptions } from "@/utils";
-import { LoginInput, RegisterInput, VerifiedUser, VerifyInput } from "./types";
+import {
+  LoginInput,
+  RegisterInput,
+  ResetPasswordInput,
+  VerifiedUser,
+  VerifyInput,
+} from "./types";
 import { httpClient } from "@/config";
 import { useMutation } from "react-query";
 
@@ -7,6 +13,7 @@ const AUTH_ENDPOINT = "/auth/login";
 const VERIFY_ENDPOINT = "/auth/verify";
 const REGISTER_ENDPOINT = "/auth/signup";
 const LOGOUT_ENDPOINT = "/auth/logout";
+const RESET_PASSWORD_ENDPOINT = "/auth/reset-password";
 
 export const useLoginMutation = (
   options?: UseMutationOptions<LoginInput, VerifiedUser>
@@ -36,5 +43,13 @@ export const useRegisterMutation = (
 ) => {
   const mutationFn = (data: RegisterInput): any =>
     httpClient.post(REGISTER_ENDPOINT, data);
+  return useMutation(mutationFn, options);
+};
+
+export const useResetPasswordMutation = (
+  options?: UseMutationOptions<ResetPasswordInput, boolean>
+) => {
+  const mutationFn = (data: ResetPasswordInput): any =>
+    httpClient.post(RESET_PASSWORD_ENDPOINT, data);
   return useMutation(mutationFn, options);
 };

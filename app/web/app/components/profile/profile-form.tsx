@@ -1,6 +1,11 @@
 "use client";
 
-import { useUpdateMe, useUserInfo } from "@/components/hooks";
+import {
+  useResetPasswordMutation,
+  useUpdateMe,
+  useUserInfo,
+} from "@/components/hooks";
+import { STRONG_PASSWORD_REGEX } from "@/constant";
 import { Form, Formik } from "formik";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -10,8 +15,23 @@ const ProfileUpdateSchema = Yup.object().shape({
   lastName: Yup.string().required("LastName is required"),
 });
 
+const ResetPasswordSchema = Yup.object().shape({
+  oldPass: Yup.string().required("Old password is required"),
+  newPass: Yup.string()
+    .required("Password is required")
+    .matches(
+      STRONG_PASSWORD_REGEX,
+      "Password must have at least 8 characters including: symbol, upper case, lower case and digit"
+    ),
+  newPass2: Yup.string()
+    .required("Confirm password is required")
+    .oneOf([Yup.ref("newPass")], "Passwords must match"),
+});
+
 function ProfileForm() {
   const { mutate: mutateMe, isLoading: meIsLoading } = useUpdateMe();
+  const { mutate: mutateResetPassword, isLoading: resetPasswordIsLoading } =
+    useResetPasswordMutation();
 
   const { user, update } = useUserInfo((state) => ({
     user: {
@@ -36,7 +56,25 @@ function ProfileForm() {
   };
   const disabled = user.signupMode === "GOOGLE";
 
-  const handleUpdate = () => {};
+  const handleUpdate = (
+    form: typeof initialValuesPassword,
+    { resetForm }: { resetForm: () => void }
+  ) => {
+    mutateResetPassword(
+      { newPassword: form.newPass, oldPassword: form.oldPass },
+      {
+        onSuccess() {
+          toast("Password Updated", { type: "success" });
+          resetForm();
+        },
+        onError(error: any) {
+          const message: string =
+            error?.response?.data?.message || error?.message;
+          toast(message, { type: "error" });
+        },
+      }
+    );
+  };
 
   const handleUpdateProfile = (form: typeof initialValuesProfile) => {
     mutateMe(form, {
@@ -53,7 +91,11 @@ function ProfileForm() {
   return (
     <div className="flex items-center justify-center flex-wrap p-12">
       <div className="mx-auto w-full max-w-[550px]">
-        <Formik initialValues={initialValuesPassword} onSubmit={handleUpdate}>
+        <Formik
+          initialValues={initialValuesPassword}
+          onSubmit={handleUpdate}
+          validationSchema={ResetPasswordSchema}
+        >
           {(formik) => {
             const { errors, touched, handleChange, values, handleBlur } =
               formik;
@@ -84,6 +126,9 @@ function ProfileForm() {
                         onBlur={handleBlur}
                         className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                       />
+                      {errors.oldPass && touched.oldPass && (
+                        <span className="error">{errors.oldPass}</span>
+                      )}
                     </div>
                   </div>
                   <div className="w-full px-3 sm:w-1/2">
@@ -104,6 +149,9 @@ function ProfileForm() {
                         onBlur={handleBlur}
                         className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                       />
+                      {errors.newPass && touched.newPass && (
+                        <span className="error">{errors.newPass}</span>
+                      )}
                     </div>
                   </div>
 
@@ -116,7 +164,7 @@ function ProfileForm() {
                         Re-enter Password
                       </label>
                       <input
-                        type="text"
+                        type="password"
                         name="newPass2"
                         disabled={disabled}
                         id="pass2Id"
@@ -125,12 +173,22 @@ function ProfileForm() {
                         onBlur={handleBlur}
                         className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                       />
+                      {errors.newPass2 && touched.newPass2 && (
+                        <span className="error">{errors.newPass2}</span>
+                      )}
                     </div>
                   </div>
                 </div>
                 <div>
-                  <button className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                    Reset Password
+                  <button
+                    disabled={resetPasswordIsLoading}
+                    className="hover:shadow-form w-[47%] block rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+                  >
+                    {resetPasswordIsLoading ? (
+                      <img src="/spin.svg" className="w-6 mx-auto" />
+                    ) : (
+                      "Reset Password"
+                    )}
                   </button>
                 </div>
               </Form>
@@ -199,7 +257,7 @@ function ProfileForm() {
                 <div>
                   <button
                     disabled={meIsLoading}
-                    className="hover:shadow-form rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+                    className="hover:shadow-form w-[47%] block rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
                   >
                     {meIsLoading ? (
                       <img src="/spin.svg" className="w-4 mx-auto" />
