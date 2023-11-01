@@ -1,9 +1,0 @@
-[build]
-  command = "yarn run build"
-  publish = "dist"
-  functions = "dist/netlify/functions"
-
-[[redirects]]
-  from = "/*"
-  to = "/.netlify/functions/main"
-  status = 200
