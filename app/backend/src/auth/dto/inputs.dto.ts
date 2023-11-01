@@ -46,3 +46,22 @@ export class VerifyInputDto {
   @IsNotEmpty()
   code: string;
 }
+
+export class ResetPasswordInput {
+  @ApiProperty()
+  @IsNotEmpty()
+  @MaxLength(225)
+  oldPassword: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @MaxLength(225)
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+  })
+  newPassword: string;
+}
