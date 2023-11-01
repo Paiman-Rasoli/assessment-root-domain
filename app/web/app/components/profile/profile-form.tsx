@@ -103,9 +103,9 @@ function ProfileForm() {
               <Form>
                 <div className="-mx-3 flex flex-col flex-wrap">
                   {disabled && (
-                    <p className="mb-2">
+                    <p className="mb-4">
                       This feature is specifically designed for individuals who
-                      have not signed up with Google.
+                      have not signed up with Google.🙂
                     </p>
                   )}
                   <div className="w-full px-3 sm:w-1/2">
