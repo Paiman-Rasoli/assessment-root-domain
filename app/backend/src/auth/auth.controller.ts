@@ -43,6 +43,10 @@ export class AuthController {
   @SkipAuth()
   @ApiResponse({ status: 500, description: 'If email taken' })
   @ApiResponse({
+    status: 400,
+    description: 'If password is not strong, firstName or password be null',
+  })
+  @ApiResponse({
     status: 200,
     description: 'Return true if user registered and ready for verify',
   })
