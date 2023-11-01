@@ -1,5 +1,12 @@
 import { AuthService } from './auth.service';
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { LocalAuthGuard, RestReqUser, SkipAuth, UserInfo } from '@app/utils';
 import {
   LoginInputDto,
@@ -7,6 +14,7 @@ import {
   VerifyInputDto,
 } from './dto/inputs.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { GoogleOauthGuard } from '@app/utils/lib/auth/google-oauth-guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -37,5 +45,12 @@ export class AuthController {
   @Post('logout')
   async logoutAction(@RestReqUser() userInfo: UserInfo) {
     return this.authService.logout(userInfo.userId);
+  }
+
+  @SkipAuth()
+  @Get('google')
+  @UseGuards(GoogleOauthGuard)
+  async googleAuth() {
+    return;
   }
 }

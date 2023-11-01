@@ -9,6 +9,7 @@ import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt-strategy';
 import { AuthController } from './auth.controller';
 import { OtvcModule } from '../otvc/otvc.module';
+import { GoogleStrategy, GoogleStrategyOptions } from './google-strategy';
 
 @Module({
   imports: [
@@ -30,6 +31,25 @@ import { OtvcModule } from '../otvc/otvc.module';
     OtvcModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    {
+      provide: GoogleStrategy,
+      useFactory: async (configService: AppConfigService) => {
+        const googleConfig = await configService.get('google');
+
+        const options: GoogleStrategyOptions = {
+          clientSecret: googleConfig.secret,
+          clientID: googleConfig.clientId,
+          callbackURL: googleConfig.callbackUrl,
+          scopes: ['email', 'profile'],
+        };
+        return new GoogleStrategy(options);
+      },
+      inject: [AppConfigService],
+    },
+  ],
 })
 export class AuthModule {}

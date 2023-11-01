@@ -15,6 +15,12 @@ export interface EmailConfig {
   accessToken: string;
 }
 
+export interface GoogleConfig {
+  secret: string;
+  clientId: string;
+  callbackUrl: string;
+}
+
 export interface AppConfigSchema {
   stage: DeploymentStage;
   port: number;
@@ -23,4 +29,5 @@ export interface AppConfigSchema {
   tokenSecret: string;
   expireIn: string;
   email: EmailConfig;
+  google: GoogleConfig;
 }
