@@ -15,6 +15,7 @@ export class EmailHelper {
   constructor(private readonly configService: AppConfigService) {}
 
   async sendVerificationEmail(input: VerificationInput): Promise<void> {
+    Logger.warn('Email config', this.configService.get('email'));
     axios
       .post(EMAIL_URL, {
         ...this.configService.get('email'),
