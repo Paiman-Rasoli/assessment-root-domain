@@ -16,3 +16,8 @@ export type VerifyInput = {
 export type RegisterInput = Pick<User, "lastName" | "firstName" | "email"> & {
   password: string;
 };
+
+export type ResetPasswordInput = {
+  oldPassword: string;
+  newPassword: string;
+};

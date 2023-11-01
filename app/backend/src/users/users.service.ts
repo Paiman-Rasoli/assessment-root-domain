@@ -41,6 +41,10 @@ export class UsersService {
     return this.usersRepository.findOneBy({ email: email });
   }
 
+  async getById(userId: number): Promise<UsersDomain> {
+    return this.usersRepository.findOneBy({ id: userId });
+  }
+
   async create(input: UserCreateInput): Promise<UsersDomain> {
     const find = await this.getByEmail(input.email);
 

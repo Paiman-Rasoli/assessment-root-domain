@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { BASE_URL } from "@/config";
 
-const SignInSchema = Yup.object().shape({
+const RegisterSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),
   firstName: Yup.string().required("FirstName is required"),
   lastName: Yup.string().required("LastName is required"),
@@ -66,7 +66,7 @@ function LoginForm() {
           <Formik
             initialValues={initialValues}
             onSubmit={handleRegister}
-            validationSchema={SignInSchema}
+            validationSchema={RegisterSchema}
           >
             {(formik) => {
               const { errors, touched, handleChange, values, handleBlur } =

@@ -1,7 +1,12 @@
 "use client";
 
 import { useLogoutMutation, useMeQuery, useUserInfo } from "@/components/hooks";
-import { LOGIN_PAGE, PROFILE_PAGE, TOKEN_KEY } from "@/constant";
+import {
+  DASHBOARD_PAGE,
+  LOGIN_PAGE,
+  PROFILE_PAGE,
+  TOKEN_KEY,
+} from "@/constant";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,7 +60,12 @@ export function Header({ children }: HeaderProps) {
         <div className="h-full">
           <header className="bg-gray-800 py-4">
             <div className="container mx-auto flex items-center justify-between px-4">
-              <h1 className="text-white text-2xl capitalize">{fullName}</h1>
+              <Link
+                href={DASHBOARD_PAGE}
+                className="text-white text-2xl capitalize"
+              >
+                {fullName}
+              </Link>
               <nav>
                 <ul className="flex space-x-4">
                   <li>

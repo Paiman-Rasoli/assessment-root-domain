@@ -3,10 +3,15 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { GoogleResponse, VerifiedUser } from './dto/types.dto';
-import { RegisterInputDto, VerifyInputDto } from './dto/inputs.dto';
+import {
+  RegisterInputDto,
+  ResetPasswordInput,
+  VerifyInputDto,
+} from './dto/inputs.dto';
 import { SignupMode, Status } from '../users/users.domain';
 import { OtvcService } from '../otvc/otvc.service';
 import { Scope } from '../otvc/otvc.domain';
+import { PasswordNotMatchException } from './errors';
 
 @Injectable()
 export class AuthService {
@@ -120,6 +125,24 @@ export class AuthService {
     delete user.password;
 
     return { ...user, access_token: this.jwtService.sign({ userId: user.id }) };
+  }
+
+  async resetPassword(
+    userId: number,
+    input: ResetPasswordInput
+  ): Promise<boolean> {
+    const findUser = await this.usersService.getById(userId);
+
+    const oldMatch = await this.checkPassword(
+      input.oldPassword,
+      findUser.password
+    );
+
+    if (!oldMatch) {
+      throw new PasswordNotMatchException();
+    }
+    const hashed = await bcrypt.hash(input.newPassword, 10);
+    return this.usersService.update(userId, { password: hashed });
   }
 
   private checkPassword(

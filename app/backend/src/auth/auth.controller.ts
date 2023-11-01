@@ -13,6 +13,7 @@ import { LocalAuthGuard, RestReqUser, SkipAuth, UserInfo } from '@app/utils';
 import {
   LoginInputDto,
   RegisterInputDto,
+  ResetPasswordInput,
   VerifyInputDto,
 } from './dto/inputs.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -76,5 +77,13 @@ export class AuthController {
         result.accessToken
       }`
     );
+  }
+
+  @Post('reset-password')
+  async resetPasswordAction(
+    @RestReqUser() userInfo: UserInfo,
+    @Body() body: ResetPasswordInput
+  ) {
+    return this.authService.resetPassword(userInfo.userId, body);
   }
 }
