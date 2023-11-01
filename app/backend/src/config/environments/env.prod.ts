@@ -2,7 +2,7 @@ import { AppConfigSchema } from '../config-schema';
 
 export const envProd = (): AppConfigSchema => ({
   stage: 'prod',
-  port: parseInt(process.env.PORT, 10) || 9000,
+  port: parseInt(process.env.PORT, 10) || 3000,
   database: {
     name: process.env.DB_NAME,
     host: process.env.DB_HOST,
