@@ -24,4 +24,5 @@ export const envDev = (): AppConfigSchema => ({
     secret: process.env.GOOGLE_SECRET_ID,
     callbackUrl: process.env.GOOGLE_CALLBACK_URL,
   },
+  webUrl: process.env.WEB_URL,
 });

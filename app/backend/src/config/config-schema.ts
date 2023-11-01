@@ -30,4 +30,5 @@ export interface AppConfigSchema {
   expireIn: string;
   email: EmailConfig;
   google: GoogleConfig;
+  webUrl: string;
 }

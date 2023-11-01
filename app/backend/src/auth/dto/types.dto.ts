@@ -11,3 +11,8 @@ export class VerifiedUser {
   createdAt: Date;
   access_token: string;
 }
+
+export class GoogleResponse {
+  errorCode?: string;
+  accessToken?: string;
+}

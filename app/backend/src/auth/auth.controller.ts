@@ -4,7 +4,9 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   Request,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { LocalAuthGuard, RestReqUser, SkipAuth, UserInfo } from '@app/utils';
@@ -15,11 +17,15 @@ import {
 } from './dto/inputs.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { GoogleOauthGuard } from '@app/utils/lib/auth/google-oauth-guard';
+import { AppConfigService } from '../config/app-config.service';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: AppConfigService
+  ) {}
 
   @Post('login')
   @UseGuards(LocalAuthGuard)
@@ -52,5 +58,25 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   async googleAuth() {
     return;
+  }
+
+  @SkipAuth()
+  @Get('google/redirect')
+  @UseGuards(GoogleOauthGuard)
+  async googleAuthRedirect(@Req() req, @Res() res) {
+    //TODO: (more improvement) check state against local db
+
+    //create account  with Google account_type if not exist and generate redirect params
+    const result = await this.authService.loginGoogle(req.user);
+    if (result.errorCode) {
+      return res.redirect(
+        `${this.configService.get('webUrl')}/login?error=${result.errorCode}`
+      );
+    }
+    return res.redirect(
+      `${this.configService.get('webUrl')}/login?access_token=${
+        result.accessToken
+      }`
+    );
   }
 }
